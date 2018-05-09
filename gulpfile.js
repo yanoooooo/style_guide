@@ -1,65 +1,24 @@
 var gulp            = require('gulp');
 var sass            = require('gulp-sass');
 var gulpFilter      = require("gulp-filter");
-//var mainBowerFiles  = require("main-bower-files");
 var less            = require('gulp-less');
-//var bower           = require("bower");
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 var del             = require("del");
 var runSequence     = require('run-sequence');
 
 gulp.task("default", function() {
-  //runSequence("bower", "sass");
+  //runSequence("js", "sass");
   runSequence("sass");
 });
 
-//bower install
-gulp.task("bower", ["bower-install"], function() {
-  var jsFilter = gulpFilter("**/*.js", {
-    restore: true
-  });
-  var fontsFilter = gulpFilter("**/fonts/*", {
-    restore: true
-  });
-  var imgFilter = gulpFilter("**/images/*", {
-    restore: true
-  });
-  var mapFilter = gulpFilter("**/*.css.map", {
-    restore: true
-  });
-  var cssFilter = gulpFilter("**/*.css", {
-    restore: true
-  });
-  var lessFilter = gulpFilter("**/*.less", {
-    restore: true
-  });
-
-  //console.log(mainBowerFiles());
-  gulp.src(mainBowerFiles())
-    .pipe(jsFilter)
-    .pipe(gulp.dest("./public/lib/js"))
-    .pipe(jsFilter.restore)
-    .pipe(fontsFilter)
-    .pipe(gulp.dest("./public/lib/fonts"))
-    .pipe(fontsFilter.restore)
-    .pipe(imgFilter)
-    .pipe(gulp.dest("./public/lib/images"))
-    .pipe(imgFilter.restore)
-    .pipe(mapFilter)
-    .pipe(gulp.dest("./public/lib/css"))
-    .pipe(mapFilter.restore)
-    .pipe(cssFilter)
-    .pipe(gulp.dest("./public/lib/css"))
-    .pipe(cssFilter.restore)
-    .pipe(lessFilter)
-    .pipe(less())
-    .pipe(gulp.dest("./public/lib/css"))
-    .pipe(lessFilter.restore);
-});
-
-gulp.task("bower-install", ["clear-libs"], function(callback) {
-  bower.commands.install().on('end', function() {
-    callback();
-  });
+gulp.task('js', function(){
+  browserify({
+    entries: ['./public/js/common.js']
+  })
+  .bundle()
+  .pipe(source('main.js'))
+  .pipe(gulp.dest('./public/js/'));
 });
 
 // Sassコンパイルタスク
@@ -80,15 +39,15 @@ gulp.task('sass-watch', ['sass'], function(){
 /**
 * cleanup task
 */
-gulp.task("clear-libs", function() {
-  del.sync("./public/lib");
-});
+// gulp.task("clear-libs", function() {
+//   del.sync("./public/lib");
+// });
 
 gulp.task("clear-css", function() {
   del.sync("./public/css");
 });
 
 gulp.task("clear-mod", function() {
-  del.sync("./bower_components");
+  //del.sync("./bower_components");
   del.sync("./node_modules");
 });

@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js"
+  },
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -19,6 +22,8 @@
     "run-sequence": "^2.2.1"
   },
   "devDependencies": {
-    "gulp-sass": "^4.0.1"
+    "browserify": "^16.2.2",
+    "gulp-sass": "^4.0.1",
+    "vinyl-source-stream": "^2.0.0"
   }
 }
