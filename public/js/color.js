@@ -193,8 +193,8 @@ window.onload = function(){
     for(var j=0; j<colorArr.length; j++) {
       // hsvに変換
       var hsv = rgb2hsv(colorArr[j]);
-      //hsv[1] = 1;
-      hsv[2] = 1;
+      //hsv[1] = 0.9;
+      hsv[2] = 0.98;
       hsvArr.push(hsv);
       //console.log(hsv);
       colorPalette.push({rgb: arr2rgb(colorArr[j]), hsv: arr2rgb(hsv2rgb(hsv))});
