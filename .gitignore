@@ -1,3 +1,6 @@
 package-lock.json
 node_modules
+public/css
+public/javascript
+public/lib
 .DS_Store

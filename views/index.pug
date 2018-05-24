@@ -1,5 +1,31 @@
 extends layout
 
 block content
-  //- h1= title
-  //- p Welcome to #{title}
+  div#main__contents
+    div.main__title.clearfix
+      p.main__title--text test title
+      p.main__title--icon
+        img(src="/img/question.png", alt="help" width="20")
+    div#moodboard__contents
+      div.moodboard__contents--wapper
+        div.moodboard__contents--inner
+          div.moodboard__contents--word
+            select#sources.custom-select(sources name="sources"  placeholder="Source Type")
+              option(value="profile") profile
+              option(value="profile") profile
+              option(value="profile") profile
+          div#moodboard__contents--img  
+            form(action="" method="post" enctype="multipart/form-data")
+              div.drag-drop-area
+                div.drag-drop-inside
+                  p.drag-drop-info ここにファイルをドロップ
+            p.moodboard__contents--slider
+              input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
+        div.moodboard__contents--inner
+          div.moodboard__contents--none
+            p.moodboard__contents--none--area none
+    div.sidemenu__contents
+      div.sidemenu__contents--inner
+        p test
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous")
+    script(type="text/javascript", src='/js/index.js')
