@@ -15,8 +15,8 @@ gulp.task("default", ["browser-sync", "watch"], function() {
 
 //ライブラリのコピー
 gulp.task('copy', function() {
-    gulp.src('./node_modules/colorthief/dist/color-thief.min.js')
-        .pipe(gulp.dest('./public/lib/'));
+  gulp.src('./node_modules/colorthief/dist/color-thief.min.js')
+    .pipe(gulp.dest('./public/lib/'));
 });
 
 // browserfyコンパイルタスク
@@ -31,6 +31,7 @@ gulp.task('js', function(){
   browserify({
     entries: [
       './public/js/common.js',
+      './public/js/image_util.js',
       './public/js/index.js'
     ]
   })
