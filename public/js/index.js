@@ -1,5 +1,9 @@
 var Common = require('./common');
 var common = new Common();
+var ImageUtil = require('./image_util');
+var image_util = new ImageUtil();
+
+// データ関係
 var pccs_words = common.data.pccs_words;
 
 // PCCSトーンのソート
@@ -13,8 +17,36 @@ new Vue({
   el: "#main__contents",
   data: {
     pccs_words: pccs_words
+  },
+  methods: {
+    clickDropArea: function(id) {
+      image_util.target_area = id;
+      fileInput.click();
+    }
   }
 })
+
+// 画像関係
+document.addEventListener('DOMContentLoaded', function () {
+  //TODO drop実装する
+  // ドロップ要素にドロップされた時
+  // dropArea.addEventListener('drop', function (ev) {
+  //   ev.preventDefault();
+  //
+  //   dropArea.classList.remove('dragover');
+  //   output.textContent = '';
+  //
+  //   // ev.dataTransfer.files に複数のファイルのリストが入っている
+  //   organizeFiles(ev.dataTransfer.files);
+  // });
+  // ファイル参照で画像を追加した場合
+  fileInput.addEventListener('change', function (ev) {
+    // ev.target.files に複数のファイルのリストが入っている
+    image_util.organizeFiles(ev.target.files);
+    // 値のリセット
+    fileInput.value = '';
+  });
+});
 
 // 高さ調整
 var board = document.getElementById('moodboard__contents');
@@ -41,31 +73,3 @@ $(function(){
             adjust();
        })
   });
-
-  // 画像あげたい
-  $(function() {
-    $(".drag-drop-area").on({
-        "dragenter dragover":function(e){
-          e.preventDefault();
-        },
-        "drop":function(e){
-        var file = e.originalEvent.dataTransfer.files[0];
-        var fr1 = new FileReader();
-        fr1.onload = function(e) {
-            var blob=new Blob([e.target.result],{"type":file.type});
-            var fr2 = new FileReader();
-            fr2.onload = function(e) {
-            var src = e.target.result;
-            src = new Uint8Array(src);
-            src = String.fromCharCode.apply("",src);
-            src = btoa(src);
-            src = "data:"+file.type+";base64,"+src;
-            $("<img>").attr({"src":src,"alt":file.name}).appendTo('.drag-drop-inside');
-            }
-            fr2.readAsArrayBuffer(blob);
-        }
-        fr1.readAsArrayBuffer(file);
-        e.preventDefault();
-        },
-    });
-});
