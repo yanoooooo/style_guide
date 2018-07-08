@@ -26,7 +26,17 @@ gulp.task('js', function(){
   })
   .bundle()
   .pipe(source('color.js'))
-  .pipe(gulp.dest('./public/js/'));
+  .pipe(gulp.dest('./public/brwjs/'));
+
+  browserify({
+    entries: [
+      './public/js/common.js',
+      './public/js/index.js'
+    ]
+  })
+  .bundle()
+  .pipe(source('index.js'))
+  .pipe(gulp.dest('./public/brwjs/'));
 });
 
 //ブラウザシンク
