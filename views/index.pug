@@ -22,10 +22,27 @@ block content
             p.moodboard__contents--slider
               input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
         div.moodboard__contents--inner
+          div.moodboard__contents--word
+            select#sources.custom-select(sources name="sources"  placeholder="Source Type")
+              option(value="profile") profile
+              option(value="profile") profile
+              option(value="profile") profile
+          div#moodboard__contents--img  
+            form(action="" method="post" enctype="multipart/form-data")
+              div.drag-drop-area
+                div.drag-drop-inside
+                  p.drag-drop-info ここにファイルをドロップ
+            p.moodboard__contents--slider
+              input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
+        
+        div.moodboard__contents--inner
           div.moodboard__contents--none
             p.moodboard__contents--none--area none
     div.sidemenu__contents
       div.sidemenu__contents--inner
         p test
+        div.color__board
+          p.color__board--list
+        input.generate__btn(type="button" value="generate")
     script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous")
     script(type="text/javascript", src='/js/index.js')
