@@ -1,14 +1,32 @@
+var Common = require('./common');
+var common = new Common();
+var pccs_words = common.data.pccs_words;
+
+// PCCSトーンのソート
+pccs_words.sort(function(a,b){
+    if(a.reading < b.reading) return -1;
+    if(a.reading > b.reading) return 1;
+    return 0;
+});
+
+new Vue({
+  el: "#main__contents",
+  data: {
+    pccs_words: pccs_words
+  }
+})
+
 // 高さ調整
 var board = document.getElementById('moodboard__contents');
 window.addEventListener('load', function(){
-var h = window.innerHeight;
-var style = board.style;
-style.minHeight = h + 'px';
+  var h = window.innerHeight;
+  var style = board.style;
+  style.minHeight = h + 'px';
 }, false);
 window.addEventListener('resize', function(){
-var h = window.innerHeight;
-var style = board.style;
-style.minHeight = h + 'px';
+  var h = window.innerHeight;
+  var style = board.style;
+  style.minHeight = h + 'px';
 }, false);
 
 $(function(){
@@ -18,7 +36,7 @@ $(function(){
             $('.drag-drop-area').css('height', h-320); //可変部分の高さを適用
             $('.moodboard__contents--none').css('height', h-150); //可変部分の高さを適用
        }
-       adjust(); 
+       adjust();
        $(window).on('resize', function(){
             adjust();
        })
@@ -28,7 +46,7 @@ $(function(){
   $(function() {
     $(".drag-drop-area").on({
         "dragenter dragover":function(e){
-        e.preventDefault();
+          e.preventDefault();
         },
         "drop":function(e){
         var file = e.originalEvent.dataTransfer.files[0];
@@ -37,11 +55,11 @@ $(function(){
             var blob=new Blob([e.target.result],{"type":file.type});
             var fr2 = new FileReader();
             fr2.onload = function(e) {
-            var src=e.target.result;
-            src=new Uint8Array(src);
-            src=String.fromCharCode.apply("",src);
-            src=btoa(src);
-            src="data:"+file.type+";base64,"+src;
+            var src = e.target.result;
+            src = new Uint8Array(src);
+            src = String.fromCharCode.apply("",src);
+            src = btoa(src);
+            src = "data:"+file.type+";base64,"+src;
             $("<img>").attr({"src":src,"alt":file.name}).appendTo('.drag-drop-inside');
             }
             fr2.readAsArrayBuffer(blob);

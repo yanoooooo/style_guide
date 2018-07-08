@@ -70,10 +70,13 @@ function hsvClustering(hsvArr, cluster) {
     clusterArr.push({hsv: [], num: 0});
     for(var j=0; j<hsvArr.length; j++) {
       if(parseInt(hsvArr[j][0] / 30) == i) {
-        sum_h += hsvArr[j][0];
-        sum_s += hsvArr[j][1];
-        sum_v += hsvArr[j][2];
-        num++;
+        // 無彩色のものは含めない
+        if(hsvArr[j][1] > 0.1) {
+          sum_h += hsvArr[j][0];
+          sum_s += hsvArr[j][1];
+          sum_v += hsvArr[j][2];
+          num++;
+        }
       }
     }
     // 合計値の平均をクラスタの代表色とする
@@ -106,16 +109,19 @@ function hsv2styleColor(clusterArr) {
       mainIndex = i;
     }
   }
+  //ここで、単語によって明度を変更する
+  main.hsv[2] = 0.85;
   styleColor.main = main.hsv;
 
-  // 一番使われていない色かつメインカラーと隣り合わない色を背景色とし、明度を上げる
+  // 一番使われていない色かつメインカラーと隣り合わない色をベースカラーとし、彩度と明度を上げる
   var background = clusterArr[0];
   for(var i=1; i<clusterArr.length; i++) {
     if(clusterArr[i].num < background.num && clusterArr[i].num != 0 && (mainIndex+1 != i || mainIndex-1 != i)) {
       background = JSON.parse(JSON.stringify(clusterArr[i]));
     }
   }
-  background.hsv[1] = 0.05;
+  background.hsv[1] = 0.03;
+  background.hsv[2] = 0.95;
   styleColor.background = background.hsv;
 
   // 抽出した色がメインカラーと反対側に色をもっていれば、それをアクセントカラーとする
@@ -192,8 +198,8 @@ window.onload = function(){
     for(var j=0; j<colorArr.length; j++) {
       // hsvに変換
       var hsv = rgb2hsv(colorArr[j]);
-      //hsv[1] = 0.9;
-      hsv[2] = 0.98;
+      // hsv[1] = 0.1;
+      //hsv[2] = 0.98;
       hsvArr.push(hsv);
       //console.log(hsv);
       colorPalette.push({rgb: arr2rgb(colorArr[j]), hsv: arr2rgb(hsv2rgb(hsv))});

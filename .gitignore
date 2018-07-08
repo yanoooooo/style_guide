@@ -1,6 +1,6 @@
 package-lock.json
 node_modules
 public/css
-public/javascript
+public/brwjs
 public/lib
 .DS_Store
