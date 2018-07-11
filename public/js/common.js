@@ -1,5 +1,6 @@
 function Common() {
   this.data = {
+    pallet_num: 8,
     pccs_group: [
       {id: 1,  name: "White"},
       {id: 2,  name: "Gray"},

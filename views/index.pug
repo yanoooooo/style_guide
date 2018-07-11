@@ -10,44 +10,53 @@ block content
     div#moodboard__contents
       div.moodboard__contents--wapper
         //-- Area1
-        div.moodboard__contents--inner
+        div#Area1.moodboard__contents--inner
           div.moodboard__contents--word
             select#sources.custom-select(sources name="sources"  placeholder="Source Type")
               option(value="0") 雰囲気に合う単語を選んでください
               option(v-for="pcw in pccs_words" v-bind:value="pcw.value") {{ pcw.name }}
+            .base_color(v-bind:style="Area1_baseStyle") test
+            .main_color(v-bind:style="Area1_mainStyle") test
+            .accent_color(v-bind:style="Area1_accentStyle") test
           div#moodboard__contents--img
             #dropArea.drag-drop-area(v-on:click="clickDropArea('Area1')")
-              #Area1.drag-drop-inside
+              .drag-drop-inside
                 p.drag-drop-info ファイルを追加する
                   br
                   i(class="material-icons md-48") image
             p.moodboard__contents--slider
               input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
         //-- Area2
-        div.moodboard__contents--inner
+        div#Area2.moodboard__contents--inner
           div.moodboard__contents--word
             select#sources.custom-select(sources name="sources"  placeholder="Source Type")
               option(value="0") 雰囲気に合う単語を選んでください
               option(v-for="pcw in pccs_words" v-bind:value="pcw.value") {{ pcw.name }}
+            .base_color(v-bind:style="Area2_baseStyle") test
+            .main_color(v-bind:style="Area2_mainStyle") test
+            .accent_color(v-bind:style="Area2_accentStyle") test
           div#moodboard__contents--img  
             form(action="" method="post" enctype="multipart/form-data")
               #dropArea.drag-drop-area(v-on:click="clickDropArea('Area2')")
-                #Area2.drag-drop-inside
+                .drag-drop-inside
                   p.drag-drop-info ファイルを追加する
                     br
                     i(class="material-icons md-48") image
             p.moodboard__contents--slider
               input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
         //-- Area3
-        div.moodboard__contents--inner
+        div#Area3.moodboard__contents--inner
           div.moodboard__contents--word
             select#sources.custom-select(sources name="sources"  placeholder="Source Type")
               option(value="0") 雰囲気に合う単語を選んでください
               option(v-for="pcw in pccs_words" v-bind:value="pcw.value") {{ pcw.name }}
+            .base_color(v-bind:style="Area3_baseStyle") test
+            .main_color(v-bind:style="Area3_mainStyle") test
+            .accent_color(v-bind:style="Area3_accentStyle") test
           div#moodboard__contents--img  
             form(action="" method="post" enctype="multipart/form-data")
               #dropArea.drag-drop-area(v-on:click="clickDropArea('Area3')")
-                #Area3.drag-drop-inside
+                .drag-drop-inside
                   p.drag-drop-info ファイルを追加する
                     br
                     i(class="material-icons md-48") image
@@ -58,6 +67,8 @@ block content
         p test
         div.color__board
           p.color__board--list
+            #color(style="width: 80px; height: 80px; background-color:pink;")
         input.generate__btn(type="button" value="generate")
+  script(src="/lib/color-thief.min.js")
   script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous")
   script(type="text/javascript", src='/brwjs/index.js')

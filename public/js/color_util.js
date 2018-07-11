@@ -1,3 +1,7 @@
+function ColorUtil(){
+  this.imgs = [];
+};
+
 // ** RGB配列をRGB文字列にする [0, 0, 0] -> "rgb(0, 0, 0)" ** //
 function arr2rgb(arr) {
   var str = "rgb(";
@@ -102,7 +106,7 @@ function hsv2styleColor(clusterArr) {
   // メインカラーはclusterArrからnumがmaxのものとする
   var main = clusterArr[0];
   var mainIndex = 0;
-  console.log(clusterArr);
+  // console.log(clusterArr);
   for(var i=1; i<clusterArr.length; i++) {
     if(clusterArr[i].num > main.num) {
       main = clusterArr[i];
@@ -179,21 +183,14 @@ function hsv2rgb(hsv) {
   return [R ,G, B];
 }
 
-
-//以下テスト表示用
-window.onload = function(){
-  // 色抽出
+// ** img.idとPCCSトーンを含む配列を投げると、その画像のメイン、アクセント、ベースを返す ** //
+ColorUtil.prototype.createColor = function createColor(pallet_num, imgs) {
   var colorThief = new ColorThief();
   var paletteNum = 8;
-  var imgArr = [
-    {img: "image1", div: "#color1", hsv: "#hsv1"},
-    {img: "image2", div: "#color2", hsv: "#hsv2"},
-    {img: "image3", div: "#color3", hsv: "#hsv3"}
-  ];
   var extractColors = {}
   var hsvArr = [];
-  for(var i=0; i<imgArr.length; i++) {
-    var colorArr = extractColorPalette(imgArr[i].img, paletteNum);
+  for(var i=0; i<imgs.length; i++) {
+    var colorArr = extractColorPalette(imgs[i].img, paletteNum);
     var colorPalette = [];
     for(var j=0; j<colorArr.length; j++) {
       // hsvに変換
@@ -204,22 +201,7 @@ window.onload = function(){
       //console.log(hsv);
       colorPalette.push({rgb: arr2rgb(colorArr[j]), hsv: arr2rgb(hsv2rgb(hsv))});
     }
-    //extract color
-    extractColors[imgArr[i].div] = new Vue({
-      el: imgArr[i].div,
-      data: {
-        colors: colorPalette
-      }
-    });
-    //hsv
-    extractColors[imgArr[i].hsv] = new Vue({
-      el: imgArr[i].hsv,
-      data: {
-        colors: colorPalette
-      }
-    });
   }
-
   // 複数の画像から抽出した色をクラスタリング
   var result = hsvClustering(hsvArr);
   var clusterColors = [];
@@ -231,36 +213,99 @@ window.onload = function(){
   for(var i=0; i<clusterColors.length; i++) {
     clusterColors[i] = {rgb: arr2rgb(hsv2rgb(clusterColors[i]))};
   }
-  var extract = new Vue({
-    el: "#extract",
-    data: {
-      colors: clusterColors
-    }
-  });
-
   // クラスタリングした色から、スタイルガイドの色を決定する
   var styleColor = hsv2styleColor(result);
-  var styleResult = new Vue({
-    el: "#result",
-    data: {
-      mainStyle: {
-        "background-color": arr2rgb(hsv2rgb(styleColor.main)),
-        "border-color":  arr2rgb(hsv2rgb(styleColor.main)),
-        "color": "white"
-      },
-      cardStyle: {
-        "border": "solid 5px",
-        "border-color":  arr2rgb(hsv2rgb(styleColor.accent))
-      },
-      bodyStyle: {
-        "background-color": arr2rgb(hsv2rgb(styleColor.background)),
-        "color": arr2rgb(hsv2rgb(styleColor.char)),
-      },
-      linkStyle: {
-        "color": arr2rgb(hsv2rgb(styleColor.link))
-      }
-    }
-  });
+  // hsvをrgbに変換
+  for(key in styleColor) {
+    styleColor[key] = arr2rgb(hsv2rgb(styleColor[key]));
+  }
 
-  console.log(styleColor);
+  return styleColor;
 };
+
+module.exports = ColorUtil;
+
+//以下テスト表示用
+// window.onload = function(){
+//   // 色抽出
+//   var colorThief = new ColorThief();
+//   var paletteNum = 8;
+//   var imgArr = [
+//     {img: "image1", div: "#color1", hsv: "#hsv1"},
+//     {img: "image2", div: "#color2", hsv: "#hsv2"},
+//     {img: "image3", div: "#color3", hsv: "#hsv3"}
+//   ];
+//   var extractColors = {}
+//   var hsvArr = [];
+//   for(var i=0; i<imgArr.length; i++) {
+//     var colorArr = extractColorPalette(imgArr[i].img, paletteNum);
+//     var colorPalette = [];
+//     for(var j=0; j<colorArr.length; j++) {
+//       // hsvに変換
+//       var hsv = rgb2hsv(colorArr[j]);
+//       // hsv[1] = 0.1;
+//       //hsv[2] = 0.98;
+//       hsvArr.push(hsv);
+//       //console.log(hsv);
+//       colorPalette.push({rgb: arr2rgb(colorArr[j]), hsv: arr2rgb(hsv2rgb(hsv))});
+//     }
+//     //extract color
+//     extractColors[imgArr[i].div] = new Vue({
+//       el: imgArr[i].div,
+//       data: {
+//         colors: colorPalette
+//       }
+//     });
+//     //hsv
+//     extractColors[imgArr[i].hsv] = new Vue({
+//       el: imgArr[i].hsv,
+//       data: {
+//         colors: colorPalette
+//       }
+//     });
+//   }
+//
+//   // 複数の画像から抽出した色をクラスタリング
+//   var result = hsvClustering(hsvArr);
+//   var clusterColors = [];
+//   for(var i=0; i<result.length; i++) {
+//     if(result[i].num != 0) {
+//       clusterColors.push(result[i].hsv);
+//     }
+//   }
+//   for(var i=0; i<clusterColors.length; i++) {
+//     clusterColors[i] = {rgb: arr2rgb(hsv2rgb(clusterColors[i]))};
+//   }
+//   var extract = new Vue({
+//     el: "#main__contents",
+//     data: {
+//       colors: clusterColors
+//     }
+//   });
+//
+//   // クラスタリングした色から、スタイルガイドの色を決定する
+//   var styleColor = hsv2styleColor(result);
+//   var styleResult = new Vue({
+//     el: "#result",
+//     data: {
+//       mainStyle: {
+//         "background-color": arr2rgb(hsv2rgb(styleColor.main)),
+//         "border-color":  arr2rgb(hsv2rgb(styleColor.main)),
+//         "color": "white"
+//       },
+//       cardStyle: {
+//         "border": "solid 5px",
+//         "border-color":  arr2rgb(hsv2rgb(styleColor.accent))
+//       },
+//       bodyStyle: {
+//         "background-color": arr2rgb(hsv2rgb(styleColor.background)),
+//         "color": arr2rgb(hsv2rgb(styleColor.char)),
+//       },
+//       linkStyle: {
+//         "color": arr2rgb(hsv2rgb(styleColor.link))
+//       }
+//     }
+//   });
+//
+//   console.log(styleColor);
+// };
