@@ -1,10 +1,11 @@
 function ImageUtil(){
   this.max_file_num = 3;
   this.target_area = "";
+  this.image_ids = {};
 }
 
 ImageUtil.prototype.organizeFiles = function organizeFiles(files) {
-  var output = document.getElementById(this.target_area);
+  var output = document.getElementById(this.target_area).getElementsByClassName("drag-drop-inside")[0];
   var img_num = output.getElementsByTagName("img").length;
   var length = files.length;
   var file;
@@ -17,9 +18,9 @@ ImageUtil.prototype.organizeFiles = function organizeFiles(files) {
   // 文言をクリア
   if(img_num == 0) {
     output.textContent = '';
+    this.image_ids[this.target_area] = [];
   }
-
-  for(var i = 0; i < length; i++){
+  for(var i=0; i<length; i++){
     file = files[i];
     // 画像のバリデーション
     if(!file || file.type.indexOf('image/') < 0) {
@@ -34,6 +35,8 @@ ImageUtil.prototype.outputImage = function outputImage(blob, output) {
   var image = new Image();
   blobURL = URL.createObjectURL(blob);
   image.src = blobURL;
+  image.id = Math.random().toString(36).slice(-8);
+  this.image_ids[this.target_area].push(image.id);
 
   image.addEventListener('load', function () {
     URL.revokeObjectURL(blobURL);

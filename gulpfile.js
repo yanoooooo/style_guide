@@ -31,6 +31,7 @@ gulp.task('js', function(){
   browserify({
     entries: [
       './public/js/common.js',
+      './public/js/color_util.js',
       './public/js/image_util.js',
       './public/js/index.js'
     ]
