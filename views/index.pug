@@ -12,9 +12,9 @@ block content
         //-- Area1
         div#Area1.moodboard__contents--inner
           div.moodboard__contents--word
-            select#sources.custom-select(sources name="sources"  placeholder="Source Type")
+            select#sources.custom-select(sources name="sources" placeholder="Source Type" v-model="Area1_word_id")
               option(value="0") 雰囲気に合う単語を選んでください
-              option(v-for="pcw in pccs_words" v-bind:value="pcw.value") {{ pcw.name }}
+              option(v-for="pcw in pccs_words" v-bind:value="pcw.id") {{ pcw.name }}
             .base_color(v-bind:style="Area1_baseStyle") test
             .main_color(v-bind:style="Area1_mainStyle") test
             .accent_color(v-bind:style="Area1_accentStyle") test
@@ -25,13 +25,13 @@ block content
                   br
                   i(class="material-icons md-48") image
             p.moodboard__contents--slider
-              input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
+              input.moodboard__contents--slider-weight(type="range" id="Area1_slider" min="0" max="100" value="50")
         //-- Area2
         div#Area2.moodboard__contents--inner
           div.moodboard__contents--word
-            select#sources.custom-select(sources name="sources"  placeholder="Source Type")
+            select#sources.custom-select(sources name="sources"  placeholder="Source Type" v-model="Area2_word_id")
               option(value="0") 雰囲気に合う単語を選んでください
-              option(v-for="pcw in pccs_words" v-bind:value="pcw.value") {{ pcw.name }}
+              option(v-for="pcw in pccs_words" v-bind:value="pcw.id") {{ pcw.name }}
             .base_color(v-bind:style="Area2_baseStyle") test
             .main_color(v-bind:style="Area2_mainStyle") test
             .accent_color(v-bind:style="Area2_accentStyle") test
@@ -43,13 +43,13 @@ block content
                     br
                     i(class="material-icons md-48") image
             p.moodboard__contents--slider
-              input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
+              input.moodboard__contents--slider-weight(type="range" id="Area2_slider" min="0" max="100" value="50")
         //-- Area3
         div#Area3.moodboard__contents--inner
           div.moodboard__contents--word
-            select#sources.custom-select(sources name="sources"  placeholder="Source Type")
+            select#sources.custom-select(sources name="sources"  placeholder="Source Type" v-model="Area3_word_id")
               option(value="0") 雰囲気に合う単語を選んでください
-              option(v-for="pcw in pccs_words" v-bind:value="pcw.value") {{ pcw.name }}
+              option(v-for="pcw in pccs_words" v-bind:value="pcw.id") {{ pcw.name }}
             .base_color(v-bind:style="Area3_baseStyle") test
             .main_color(v-bind:style="Area3_mainStyle") test
             .accent_color(v-bind:style="Area3_accentStyle") test
@@ -61,13 +61,15 @@ block content
                     br
                     i(class="material-icons md-48") image
             p.moodboard__contents--slider
-              input.moodboard__contents--slider-weight(type="range" name="example2" value="0")
+              input.moodboard__contents--slider-weight(type="range" id="Area3_slider" min="0" max="100" value="50")
     div.sidemenu__contents
       div.sidemenu__contents--inner
         p test
         div.color__board
           p.color__board--list
-            #color(style="width: 80px; height: 80px; background-color:pink;")
+            #output__baseColor(v-bind:style="output_baseStyle") base
+            #output__mainColor(v-bind:style="output_mainStyle") main
+            #output__accentColor(v-bind:style="output_accentStyle") accent
         input.generate__btn(type="button" value="generate")
   script(src="/lib/color-thief.min.js")
   script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous")
