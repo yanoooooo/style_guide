@@ -7,6 +7,7 @@ var color_util = new ColorUtil();
 
 // データ関係
 var pccs_words = common.data.pccs_words;
+var styleName = ["mainStyle", "accentStyle", "baseStyle"];
 
 // PCCSトーンのソート
 pccs_words.sort(function(a,b){
@@ -22,22 +23,79 @@ var vue_data = new Vue({
     Area1_baseStyle: {},
     Area1_mainStyle: {},
     Area1_accentStyle: {},
+    Area1_word_id: 0,
     Area2_baseStyle: {},
     Area2_mainStyle: {},
     Area2_accentStyle: {},
+    Area2_word_id: 0,
     Area3_baseStyle: {},
     Area3_mainStyle: {},
     Area3_accentStyle: {},
+    Area3_word_id: 0,
+    output_baseStyle: {},
+    output_mainStyle: {},
+    output_accentStyle: {}
   },
   methods: {
     clickDropArea: function(id) {
+      if(vue_data[id+"_word_id"] == 0) {
+        alert("最初に単語を選んでください");
+        return;
+      }
       image_util.target_area = id;
       fileInput.click();
     }
   }
 })
 
-// 画像関係
+// -------- Slide bar
+var slider1 = document.getElementById("Area1_slider");
+var slider2 = document.getElementById("Area2_slider");
+var slider3 = document.getElementById("Area3_slider");
+
+slider1.oninput = function() { slideBarGenerate(this.id);}
+slider2.oninput = function() { slideBarGenerate(this.id);}
+slider3.oninput = function() { slideBarGenerate(this.id);}
+
+function getExtractColors() {
+  var colors = {
+    "color1": {
+      base: vue_data.Area1_baseStyle["background-color"],
+      main: vue_data.Area1_mainStyle["background-color"],
+      accent: vue_data.Area1_accentStyle["background-color"],
+      slider: slider1.value
+    },
+    "color2": {
+      base: vue_data.Area2_baseStyle["background-color"],
+      main: vue_data.Area2_mainStyle["background-color"],
+      accent: vue_data.Area2_accentStyle["background-color"],
+      slider: slider2.value
+    },
+    "color3": {
+      base: vue_data.Area3_baseStyle["background-color"],
+      main: vue_data.Area3_mainStyle["background-color"],
+      accent: vue_data.Area3_accentStyle["background-color"],
+      slider: slider3.value
+    },
+  }
+  return colors;
+}
+
+function slideBarGenerate(slider_id){
+  var colors = getExtractColors();
+  mixed_colors = color_util.mixedColor(colors);
+  vue_data["output_"+styleName[0]] = {
+    "background-color": mixed_colors.main
+  }
+  vue_data["output_"+styleName[1]] = {
+    "background-color": mixed_colors.accent
+  }
+  vue_data["output_"+styleName[2]] = {
+    "background-color": mixed_colors.base
+  }
+}
+
+// -------- 画像関係
 document.addEventListener('DOMContentLoaded', function () {
   //https://qiita.com/amamamaou/items/1b51c834d62c8567fad4
   //TODO drop実装する
@@ -69,11 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
       imgs.push({img: image_ids_arr[i]});
     }
 
-    var promise = sleep(0.5, createColor, imgs);
+    var promise = sleep(0.5, createColor, imgs, vue_data[image_util.target_area+"_word_id"]);
     promise.then(function(result) {
       // console.log(result);
       var styleColor = result;
-      var styleName = ["mainStyle", "accentStyle", "baseStyle"];
 
       vue_data[image_util.target_area+"_"+styleName[0]] = {
         "background-color": styleColor.main,
@@ -87,21 +144,34 @@ document.addEventListener('DOMContentLoaded', function () {
         "background-color": styleColor.background,
         "border-color":  styleColor.background
       }
+
+      // 出力する色
+      var colors = getExtractColors();
+      mixed_colors = color_util.mixedColor(colors);
+      vue_data["output_"+styleName[0]] = {
+        "background-color": mixed_colors.main
+      }
+      vue_data["output_"+styleName[1]] = {
+        "background-color": mixed_colors.accent
+      }
+      vue_data["output_"+styleName[2]] = {
+        "background-color": mixed_colors.base
+      }
     })
   });
 });
 
-const createColor = (imgs) => {
+const createColor = (imgs, word_id) => {
   // var sourceImage = document.getElementById(image_util.target_area).children;
   // console.log(sourceImage);
-  var result = color_util.createColor(common.data.pallet_num, imgs);
+  var result = color_util.createColor(common.data.pallet_num, imgs, word_id);
   return result;
 }
 
-const sleep = (waitSeconds, someFunction, imgs) => {
+const sleep = (waitSeconds, someFunction, imgs, word_id) => {
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve(someFunction(imgs))
+      resolve(someFunction(imgs, word_id))
     }, waitSeconds * 1000)
   })
 }

@@ -1,3 +1,6 @@
+var Common = require('./common');
+var common = new Common();
+
 function ColorUtil(){
   this.imgs = [];
 };
@@ -25,7 +28,7 @@ function extractColorPalette(id, num) {
 }
 
 // ** rgb値を円錐型のHSV値に変換する [r, g, b] -> [h, s, v] ** //
-function rgb2hsv(rgb) {
+function arr2hsv(rgb) {
   var r = rgb[0] / 255;
   var g = rgb[1] / 255;
   var b = rgb[2] / 255;
@@ -49,7 +52,7 @@ function rgb2hsv(rgb) {
       h = (60 * ((r - g) / diff)) + 240;
       break;
     default:
-      console.log("rgb2hsv error");
+      console.log("arr2hsv error");
       break;
   }
   if(h < 0) {
@@ -95,13 +98,30 @@ function hsvClustering(hsvArr, cluster) {
 
 // ** クラスタリングされた色からスタイルガイド用の色を決定する
 // [{hsv: [h, s, v], num: 1}, {hsv: [], num: 0}] -> {main: [h, s, v], background: []....} **//
-function hsv2styleColor(clusterArr) {
+function hsv2styleColor(clusterArr, word_id) {
+  var pccs_group = common.data.pccs_group;
+  var pccs_words = common.data.pccs_words;
+  // console.log(word_group_id);
+  // console.log(pccs_group);
   var styleColor = {};
   styleColor.main = [];
   styleColor.background = [];
   styleColor.accent = [];
   styleColor.char = [];
   styleColor.link = [];
+  var pccs = {}
+  var group_id = 0;
+  for(index in pccs_words) {
+    if(word_id == pccs_words[index]["id"]) {
+      group_id = pccs_words[index]["group"];
+    }
+  }
+
+  for(index in pccs_group) {
+    if(group_id == pccs_group[index]["id"]) {
+      pccs = pccs_group[index];
+    }
+  }
 
   // メインカラーはclusterArrからnumがmaxのものとする
   var main = clusterArr[0];
@@ -114,11 +134,12 @@ function hsv2styleColor(clusterArr) {
     }
   }
   //ここで、単語によって明度を変更する
-  main.hsv[2] = 0.85;
+  main.hsv[1] = pccs.saturation;
+  main.hsv[2] = pccs.value;
   styleColor.main = main.hsv;
 
   // 一番使われていない色かつメインカラーと隣り合わない色をベースカラーとし、彩度と明度を上げる
-  var background = clusterArr[0];
+  var background = JSON.parse(JSON.stringify(main));
   for(var i=1; i<clusterArr.length; i++) {
     if(clusterArr[i].num < background.num && clusterArr[i].num != 0 && (mainIndex+1 != i || mainIndex-1 != i)) {
       background = JSON.parse(JSON.stringify(clusterArr[i]));
@@ -183,8 +204,20 @@ function hsv2rgb(hsv) {
   return [R ,G, B];
 }
 
+// ** 文字列rgbをarrayに変換 "rgb(r, g, b)" -> [r, g, b] ** //
+function rgb2arr(rgb_str) {
+  var str = JSON.parse(JSON.stringify(rgb_str));
+  str = str.replace("rgb(", "");
+  str = str.replace(")", "");
+  arr = str.split(",");
+  for(index in arr) {
+    arr[index] = parseInt(arr[index]);
+  }
+  return arr;
+}
+
 // ** img.idとPCCSトーンを含む配列を投げると、その画像のメイン、アクセント、ベースを返す ** //
-ColorUtil.prototype.createColor = function createColor(pallet_num, imgs) {
+ColorUtil.prototype.createColor = function createColor(pallet_num, imgs, word_group_id) {
   var colorThief = new ColorThief();
   var paletteNum = 8;
   var extractColors = {}
@@ -194,33 +227,58 @@ ColorUtil.prototype.createColor = function createColor(pallet_num, imgs) {
     var colorPalette = [];
     for(var j=0; j<colorArr.length; j++) {
       // hsvに変換
-      var hsv = rgb2hsv(colorArr[j]);
-      // hsv[1] = 0.1;
-      //hsv[2] = 0.98;
+      var hsv = arr2hsv(colorArr[j]);
       hsvArr.push(hsv);
-      //console.log(hsv);
       colorPalette.push({rgb: arr2rgb(colorArr[j]), hsv: arr2rgb(hsv2rgb(hsv))});
     }
   }
-  // 複数の画像から抽出した色をクラスタリング
-  var result = hsvClustering(hsvArr);
-  var clusterColors = [];
-  for(var i=0; i<result.length; i++) {
-    if(result[i].num != 0) {
-      clusterColors.push(result[i].hsv);
-    }
-  }
-  for(var i=0; i<clusterColors.length; i++) {
-    clusterColors[i] = {rgb: arr2rgb(hsv2rgb(clusterColors[i]))};
-  }
+
   // クラスタリングした色から、スタイルガイドの色を決定する
-  var styleColor = hsv2styleColor(result);
+  var styleColor = hsv2styleColor(hsvClustering(hsvArr), word_group_id);
   // hsvをrgbに変換
   for(key in styleColor) {
     styleColor[key] = arr2rgb(hsv2rgb(styleColor[key]));
   }
 
   return styleColor;
+};
+
+// ** Sliderの値に応じて、3色をミックスしたrgb値を返す ** //
+ColorUtil.prototype.mixedColor = function mixedColor(colors) {
+  var result = {
+    "base": [0, 0, 0],
+    "main": [0, 0, 0],
+    "accent": [0, 0, 0]
+  };
+  var num = 0.0;
+
+  for(index in colors) {
+    if(colors[index]["base"]) {
+      var key = index;
+      var rgb = rgb2arr(colors[key]["base"]);
+      var slider_rate = parseFloat(colors[key]["slider"]/100);
+      result["base"][0] += rgb[0] * slider_rate;
+      result["base"][1] += rgb[1] * slider_rate;
+      result["base"][2] += rgb[2] * slider_rate;
+
+      rgb = rgb2arr(colors[key]["main"]);
+      result["main"][0] += rgb[0] * slider_rate;
+      result["main"][1] += rgb[1] * slider_rate;
+      result["main"][2] += rgb[2] * slider_rate;
+
+      color = rgb2arr(colors[key]["accent"]);
+      result["accent"][0] += color[0] * slider_rate;
+      result["accent"][1] += color[1] * slider_rate;
+      result["accent"][2] += color[2] * slider_rate;
+
+      num += slider_rate;
+    }
+  }
+  result["base"] = arr2rgb([parseInt(result["base"][0]/num), parseInt(result["base"][1]/num), parseInt(result["base"][2]/num)]);
+  result["main"] = arr2rgb([parseInt(result["main"][0]/num), parseInt(result["main"][1]/num), parseInt(result["main"][2]/num)]);
+  result["accent"] = arr2rgb([parseInt(result["accent"][0]/num), parseInt(result["accent"][1]/num), parseInt(result["accent"][2]/num)]);
+
+  return result;
 };
 
 module.exports = ColorUtil;
@@ -242,9 +300,9 @@ module.exports = ColorUtil;
 //     var colorPalette = [];
 //     for(var j=0; j<colorArr.length; j++) {
 //       // hsvに変換
-//       var hsv = rgb2hsv(colorArr[j]);
-//       // hsv[1] = 0.1;
-//       //hsv[2] = 0.98;
+//       var hsv = arr2hsv(colorArr[j]);
+//       // hsv[1] = 0.9;
+//       // hsv[2] = 0.9;
 //       hsvArr.push(hsv);
 //       //console.log(hsv);
 //       colorPalette.push({rgb: arr2rgb(colorArr[j]), hsv: arr2rgb(hsv2rgb(hsv))});
