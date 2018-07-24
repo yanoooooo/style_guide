@@ -3,7 +3,7 @@ extends layout
 block content
   div#main__contents
     div.main__title.clearfix
-      p.main__title--text test title
+      p.main__title--text Style Guide
       p.main__title--icon
         i(class="material-icons") help
     input#fileInput(type="file" style="display:none;" accept="image/*" multiple)
@@ -15,9 +15,10 @@ block content
             select#sources.custom-select(sources name="sources" placeholder="Source Type" v-model="Area1_word_id")
               option(value="0") 雰囲気に合う単語を選んでください
               option(v-for="pcw in pccs_words" v-bind:value="pcw.id") {{ pcw.name }}
-            .base_color(v-bind:style="Area1_baseStyle") test
-            .main_color(v-bind:style="Area1_mainStyle") test
-            .accent_color(v-bind:style="Area1_accentStyle") test
+            .extract-colors
+              .base-color(v-bind:style="Area1_baseStyle")
+              .main-color(v-bind:style="Area1_mainStyle")
+              .accent-color(v-bind:style="Area1_accentStyle")
           div#moodboard__contents--img
             #dropArea.drag-drop-area(v-on:click="clickDropArea('Area1')")
               .drag-drop-inside
@@ -32,9 +33,10 @@ block content
             select#sources.custom-select(sources name="sources"  placeholder="Source Type" v-model="Area2_word_id")
               option(value="0") 雰囲気に合う単語を選んでください
               option(v-for="pcw in pccs_words" v-bind:value="pcw.id") {{ pcw.name }}
-            .base_color(v-bind:style="Area2_baseStyle") test
-            .main_color(v-bind:style="Area2_mainStyle") test
-            .accent_color(v-bind:style="Area2_accentStyle") test
+            .extract-colors
+              .base-color(v-bind:style="Area2_baseStyle")
+              .main-color(v-bind:style="Area2_mainStyle")
+              .accent-color(v-bind:style="Area2_accentStyle")
           div#moodboard__contents--img  
             form(action="" method="post" enctype="multipart/form-data")
               #dropArea.drag-drop-area(v-on:click="clickDropArea('Area2')")
@@ -50,9 +52,10 @@ block content
             select#sources.custom-select(sources name="sources"  placeholder="Source Type" v-model="Area3_word_id")
               option(value="0") 雰囲気に合う単語を選んでください
               option(v-for="pcw in pccs_words" v-bind:value="pcw.id") {{ pcw.name }}
-            .base_color(v-bind:style="Area3_baseStyle") test
-            .main_color(v-bind:style="Area3_mainStyle") test
-            .accent_color(v-bind:style="Area3_accentStyle") test
+            .extract-colors
+              .base-color(v-bind:style="Area3_baseStyle")
+              .main-color(v-bind:style="Area3_mainStyle")
+              .accent-color(v-bind:style="Area3_accentStyle")
           div#moodboard__contents--img  
             form(action="" method="post" enctype="multipart/form-data")
               #dropArea.drag-drop-area(v-on:click="clickDropArea('Area3')")
@@ -64,13 +67,16 @@ block content
               input.moodboard__contents--slider-weight(type="range" id="Area3_slider" min="0" max="100" value="50")
     div.sidemenu__contents
       div.sidemenu__contents--inner
-        p test
         div.color__board
           p.color__board--list
-            #output__baseColor(v-bind:style="output_baseStyle") base
-            #output__mainColor(v-bind:style="output_mainStyle") main
-            #output__accentColor(v-bind:style="output_accentStyle") accent
-        input.generate__btn(type="button" value="generate")
+            h5 Base color
+            #output__baseColor.generated-color(v-bind:style="output_baseStyle")
+            h5 Main color
+            #output__mainColor.generated-color(v-bind:style="output_mainStyle")
+            h5 Accent color
+            #output__accentColor.generated-color(v-bind:style="output_accentStyle")
+              //- input.generate__btn(type="button" value="generate")
+          button(type="button" class="btn btn-info") Generate
   script(src="/lib/color-thief.min.js")
   script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous")
   script(type="text/javascript", src='/brwjs/index.js')
