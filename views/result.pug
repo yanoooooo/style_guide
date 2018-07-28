@@ -1,10 +1,23 @@
 extends layout
 
 block content
-  section.color__contents
-    h1 resurt
-    div.color__contents--inner
-      div.color__contents--main
-      div.color__contents--inner2
-        p.color__contents--title aaaa
-    input.color__contents--btn(type="button" value="back")
+  section.color-contents
+    div.color-contents__inner
+      div.color-contents__pc
+        p.color-contents__pc--header PC
+        div.color-contents__inner--pc
+          div.color-contents__main--pc 
+            p.color-contents__main--pctext main_color
+          div.color-contents__base--pc
+            p.color-contents__base--text base_color
+            p.color-contents__accent--pc accent_color
+      div.color-contents__sp
+        p.color-contents__sp--header SP
+        div.color-contents__inner--sp
+          div.color-contents__main--sp
+            p.color-contents__main--text main_color
+          div.color-contents__base--sp
+            p.color-contents__base--text base_color
+            p.color-contents__accent--sp accent_color
+            img.color-contents__footer--sp(src="/img/footer.png")
+    input.color-contents__btn(type="button" value="back")
