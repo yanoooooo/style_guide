@@ -81,8 +81,11 @@ block content
             #output__mainColor.generated-color(v-bind:style="output_mainStyle")
             h5 Accent color
             #output__accentColor.generated-color(v-bind:style="output_accentStyle")
-              //- input.generate__btn(type="button" value="generate")
-          button(type="button" class="btn btn-info") Generate
+          form(action="/result" name="colors" method="post")
+            input(type="hidden" name="base" v-bind:value="output_baseStyle['background-color']")
+            input(type="hidden" name="main" v-bind:value="output_mainStyle['background-color']")
+            input(type="hidden" name="accent" v-bind:value="output_accentStyle['background-color']")
+            button(type="submit" class="btn btn-info") Generate
   script(src="/lib/color-thief.min.js")
   script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous")
   script(type="text/javascript", src='/brwjs/index.js')
