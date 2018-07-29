@@ -1,23 +1,32 @@
 extends layout
 
 block content
-  section.color-contents
+  section#result__contents.color-contents
     div.color-contents__inner
       div.color-contents__pc
         p.color-contents__pc--header PC
         div.color-contents__inner--pc
-          div.color-contents__main--pc 
+          div.color-contents__main--pc(v-bind:style="main")
             p.color-contents__main--pctext main_color
-          div.color-contents__base--pc
+          div.color-contents__base--pc(v-bind:style="base")
             p.color-contents__base--text base_color
-            p.color-contents__accent--pc accent_color
+            p.color-contents__accent--pc(v-bind:style="accent") accent_color
       div.color-contents__sp
         p.color-contents__sp--header SP
         div.color-contents__inner--sp
-          div.color-contents__main--sp
+          div.color-contents__main--sp(v-bind:style="main")
             p.color-contents__main--text main_color
-          div.color-contents__base--sp
+          div.color-contents__base--sp(v-bind:style="base")
             p.color-contents__base--text base_color
-            p.color-contents__accent--sp accent_color
+            p.color-contents__accent--sp(v-bind:style="accent") accent_color
             img.color-contents__footer--sp(src="/img/footer.png")
     input.color-contents__btn(type="button" value="back")
+    script.
+      new Vue({
+        el: "#result__contents",
+        data: {
+          base: {"background-color": !{JSON.stringify(base)}},
+          main: {"background-color": !{JSON.stringify(main)}},
+          accent: {"background-color": !{JSON.stringify(accent)}}
+        }
+      })

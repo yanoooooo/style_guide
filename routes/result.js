@@ -6,8 +6,8 @@ var router = express.Router();
 //   res.send('respond with a resource');
 // });
 
-router.get('/', function(req, res, next) {
-  res.render('result', { title: 'Result' });
+router.post('/', function(req, res, next) {
+  res.render('result', { title: 'Result', base: req.body.base, main: req.body.main, accent: req.body.accent});
 });
 
 module.exports = router;
