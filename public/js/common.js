@@ -13,7 +13,7 @@ function Common() {
       {id: 9,  name: "Soft Tone", saturation: 0.50, value: 0.625},
       {id: 10, name: "Dull Tone", saturation: 0.50, value: 0.425},
       {id: 11, name: "Dark Tone", saturation: 0.50, value: 0.125},
-      {id: 12, name: "Bright Tone", saturation: 0.80, value: 0.20},
+      {id: 12, name: "Bright Tone", saturation: 0.30, value: 0.90},
       {id: 13, name: "Strong Tone", saturation: 0.80, value: 0.50},
       {id: 14, name: "Deep Tone", saturation: 0.80, value: 0.80},
       {id: 15, name: "Vivid Tone", saturation: 0.90, value: 0.50}
