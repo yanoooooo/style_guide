@@ -9,18 +9,36 @@ var del             = require("del");
 var runSequence     = require('run-sequence');
 
 gulp.task("default", ["browser-sync", "watch"], function() {
-  //runSequence("js", "sass");
-  runSequence("sass");
+  runSequence("copy", "js", "sass");
+  //runSequence("sass");
+});
+
+//ライブラリのコピー
+gulp.task('copy', function() {
+  gulp.src('./node_modules/colorthief/dist/color-thief.min.js')
+    .pipe(gulp.dest('./public/lib/'));
 });
 
 // browserfyコンパイルタスク
 gulp.task('js', function(){
   browserify({
-    entries: ['./public/js/common.js']
+    entries: ['./public/js/color_util.js']
   })
   .bundle()
-  .pipe(source('main.js'))
-  .pipe(gulp.dest('./public/js/'));
+  .pipe(source('color.js'))
+  .pipe(gulp.dest('./public/brwjs/'));
+
+  browserify({
+    entries: [
+      './public/js/common.js',
+      './public/js/color_util.js',
+      './public/js/image_util.js',
+      './public/js/index.js'
+    ]
+  })
+  .bundle()
+  .pipe(source('index.js'))
+  .pipe(gulp.dest('./public/brwjs/'));
 });
 
 //ブラウザシンク
@@ -37,6 +55,7 @@ gulp.task('browser-sync', function () {
 
 gulp.task('watch', function(){
   gulp.watch('./public/sass/*.scss', ['sass']);
+  gulp.watch('./public/js/*.js', ['js']);
 });
 
 // Sassコンパイルタスク
@@ -57,9 +76,9 @@ gulp.task('sass-watch', ['sass'], function(){
 /**
 * cleanup task
 */
-// gulp.task("clear-libs", function() {
-//   del.sync("./public/lib");
-// });
+gulp.task("clear-libs", function() {
+  del.sync("./public/lib");
+});
 
 gulp.task("clear-css", function() {
   del.sync("./public/css");

@@ -6,9 +6,10 @@
     "start": "node ./bin/www"
   },
   "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.js"
+    "color_thief": "./node_modules/colorthief/dist/color-thief.min.js"
   },
   "dependencies": {
+    "colorthief": "^2.0.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "del": "^3.0.0",

@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  //h1= title
+  table
+    tr
+      td
+        img(src="/img/ill1.jpg" id="image1" style="width:300px")
+      td
+        #color1
+          div(v-for="color in colors" v-bind:style="{'background-color': color.rgb, color: color.rgb}") {{ color.rgb }}
+      td
+        #hsv1
+          div(v-for="color in colors" v-bind:style="{'background-color': color.hsv, color: color.hsv}") {{ color.hsv }}
+      td
+        #extract
+          div(v-for="color in colors" v-bind:style="{'background-color': color.rgb, color: color.rgb}") {{ color.rgb }}
+    tr
+      td
+        img(src="/img/ill2.jpg" id="image2" style="width:300px")
+      td
+        #color2
+          div(v-for="color in colors" v-bind:style="{'background-color': color.rgb, color: color.rgb}") {{ color.rgb }}
+      td
+        #hsv2
+          div(v-for="color in colors" v-bind:style="{'background-color': color.hsv, color: color.hsv}") {{ color.hsv }}
+    tr
+      td
+        img(src="/img/ill3.jpg" id="image3" style="width:300px")
+      td
+        #color3
+          div(v-for="color in colors" v-bind:style="{'background-color': color.rgb, color: color.rgb}") {{ color.rgb }}
+      td
+        #hsv3
+          div(v-for="color in colors" v-bind:style="{'background-color': color.hsv, color: color.hsv}") {{ color.hsv }}
+  #result
+    .card(style="margin: 5%;" v-bind:style="cardStyle")
+      .card-header(v-bind:style="mainStyle") main color
+      .card-body(v-bind:style="bodyStyle")
+        p.card-text This is a color test.
+        p.card-text(v-bind:style="linkStyle") This is a link test.
+  script(src="/lib/color-thief.min.js")
+  script(src="/brwjs/color.js")
+  script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js")
+  script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js")
+  //- script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js")
